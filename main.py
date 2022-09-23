@@ -12,15 +12,16 @@ class CoinBot:
     #     return self.client.get_account()
 
     def buy_coin_at_discount(self):
-      #1.코인의 지금가격을 불러온다
-      #3. 그가격에 주문을 넣는다.
-      ticker_info = self.client.get_ticker(symbol="BTCUSDT")
-      last_price = ticker_info['lastPrice']
-      #2. 코인의 지금가격에서 10% 디스카운트된 가격계산
-      discount_price = float(last_price) * 0.9
+        #1.코인의 지금가격을 불러온다
+        #3. 그가격에 주문을 넣는다.
+        ticker_info = self.client.get_ticker(symbol="BTCUSDT")
+        last_price = ticker_info['lastPrice']
+        #2. 코인의 지금가격에서 10% 디스카운트된 가격계산
+        discount_price = float(last_price) * 0.9
 
-      print(last_price)
-      print(discount_price)
+        print(last_price)
+        print(discount_price)
+
 
 # bot = CoinBot()
 # print(bot.get_account())
