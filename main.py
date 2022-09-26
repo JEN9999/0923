@@ -1,41 +1,70 @@
-from binance.client import Client
+# 일론 머스크 트윗할때 코인사기
+# 트위터 API 필요
+
+#1. 일론머스크의 트윗을 검색
+#userID
+#https://api.twitter.com/2/users/by?usernames=twitterdev,twitterapi,adsapi&user.fields=created_at&expansions=pinned_tweet_id&tweet.fields=author_id,created_at
 
 
-class CoinBot:
-    API_KEY = 'CpTUySnXt57UtWj5wOedmThtXtMZP8FDojxbEgk9d1Iz4mojF3l1VFGuOmeXXB0p'
-    API_SECRET = 'cplg01rHhXT8CQCw6yn4w0x9T2ApxN9cPpYlwUSQtJLpUoBDx9g2O68yMyjYVmNL'
+#https://api.twitter.com/2/users/:id/timelines/reverse_chronological?tweet.fields=created_at&expansions=author_id&user.fields=created_at&max_results=5
 
-    def __init__(self):
-        self.client = Client(self.API_KEY, self.API_SECRET, testnet=True)
-
-    def get_account(self):
-        return self.client.get_account()
-
-    def buy_coin_at_discount(self, symbol, quantity):
-        #1.코인의 지금가격을 불러온다
-        ticker_info = self.client.get_ticker(symbol=symbol)
-        last_price = ticker_info['lastPrice']
-        #2. 코인의 지금가격에서 10% 디스카운트된 가격계산
-        discount_price = round(int(float(last_price)) * 0.9,
-                               2)  # 1불일경우에 0불에 주문을 넣는 경우가 생김 >>
-        #3. 그가격에 주문을 넣는다.
-        order = self.client.order_limit_buy(symbol=symbol,
-                                            quantity=quantity,
-                                            price=str(discount_price))
-
-        print(last_price)
-        print(discount_price)
-        print(order)
-        return order
-
-    def buy_coin_at_market_price(self, symbol, quantity):
-        order = self.client.order_market_buy(symbol=symbol, quantity=quantity)
-        return order
+#2. 트윗에서 코인 이름 검색
+#3. 코인이름이 검색되면 그 코인 사기
+import requests
+from coin_bot import CoinBot
 
 
+class TwitterClient:
+  def __init__(self):
+    bearer_token = "bearer_token = 'AAAAAAAAAAAAAAAAAAAAAG%2F5hQEAAAAAk6MS7%2ByA%2FiykrdJGmZvgfjOUjvw%3D3AOcPNEs6IMsz1tLFBfn92JUeE0OO5Ce9GSx0S05oZr518odDZ'
+    self.headers = {'Authorization':f'Bearer {bearer_token}'}
 
-bot = CoinBot()
-# bot.buy_coin_at_discount('LTCUSDT',1)
-# order_result = bot.buy_coin_at_market_price('LTCUSDT', 1)
-print(bot.client.get_account())
-# print(order_result)
+  def get_user(username):
+    url = f'https://api.twitter.com/2/users/by/username/{username}'
+    raw_resp = requests.get(url, headers=self.headers)
+      
+  
+    return raw_resp.json()
+    
+
+
+  def get_tweets_by_user_id(self,user_id):
+   
+    url = f'https://api.twitter.com/2/users/{user_id}/tweets'
+    raw_resp = requests.get(url, 
+      headers=self.headers,
+      params={
+        'max_results':100,
+      })
+                           
+    resp = raw_resp.json()
+    print(resp)
+
+
+def is_bitcoin_in_tweet(self,tweet_info):
+  text = tweet_info['text']
+  return "bitcoin" in text.lower():
+    
+
+def buy_bitcoin_if_elon_says_so():
+  twitterClient = TwitterClient()
+  bot = CoinBot()
+  tweets_by_elon = get_tweets_by_user_id(44196397)
+  for tweet in tweets_by_elon:
+    is_bitcoin_included = is_bitcoin_in_tweet(tweet)
+    if(is_bitcoin_included):
+      #buy bitcoin
+      bot.buy_coin_at_discount('BTCUSDT',1)
+      print("주문 완료!",order)
+      
+  
+  
+# get_user('elonmusk')
+
+# tweets_by_elon = get_tweets_by_user_id(44196397)
+# print(tweets_by_elon) 
+
+# tweet_info = {'id':'123125215','text':'Bitcoin'}
+# is_bitcoin_in_tweet = find_coin_from_tweet(tweet_info)
+# print(is_bitcoin_in_tweet)
+
